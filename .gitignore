@@ -130,3 +130,7 @@ dmypy.json
 
 # virtual environment
 venv/
+
+# Visual Studio code workspace
+workspace.code-workspace
+
