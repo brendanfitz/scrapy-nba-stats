@@ -1,7 +1,5 @@
 import scrapy
 from urllib.parse import quote_plus
-from scrapy.http import Request
-
 
 class PlayersSpider(scrapy.Spider):
     name = 'players'
