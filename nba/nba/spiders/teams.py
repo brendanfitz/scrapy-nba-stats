@@ -25,8 +25,8 @@ class TeamsSpider(scrapy.Spider):
             data['playoffs'] = 1
             yield data
     
-    def parse_table(self, response, _class):
-        table = response.xpath(f'//table[@id="{_class}"]')
+    def parse_table(self, response, _id):
+        table = response.xpath(f'//table[@id="{_id}"]')
         if len(table) == 0:
             return
 
