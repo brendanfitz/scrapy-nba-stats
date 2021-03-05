@@ -17,16 +17,16 @@ class TeamsSpider(scrapy.Spider):
         yield scrapy.Request(start_url, self.parse)
 
     def parse(self, response):
-        for data in self.parse_table(response, _class="games"):
+        for data in self.parse_table(response, _id="games"):
             data['playoffs'] = 0
             yield data
 
-        for data in self.parse_table(response, _class="games_playoffs"):
+        for data in self.parse_table(response, _id="games_playoffs"):
             data['playoffs'] = 1
             yield data
     
-    def parse_table(self, response, _class):
-        table = response.xpath(f'//table[@id="{_class}"]')
+    def parse_table(self, response, _id):
+        table = response.xpath(f'//table[@id="{_id}"]')
         if len(table) == 0:
             return
 
@@ -56,6 +56,6 @@ class TeamsSpider(scrapy.Spider):
             for row in reader:
                 teams.append(row)
         
-        teams_mappings = {row['team_name']: row['href'] for row in teams}
+        teams_mappings = {row['team_name']: row['team_id'] for row in teams}
 
         return teams_mappings

@@ -16,4 +16,4 @@ class TeamsMappingSpider(scrapy.Spider):
                     .replace('/teams/', '')
                     .replace('/', '')
                 )
-                yield dict(team_name=team_name, href=href)
+                yield dict(team_name=team_name, team_id=href)
