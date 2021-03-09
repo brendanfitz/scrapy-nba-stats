@@ -7,6 +7,8 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+from os import environ
+
 BOT_NAME = 'nba'
 
 SPIDER_MODULES = ['nba.spiders']
@@ -14,7 +16,8 @@ NEWSPIDER_MODULE = 'nba.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'nba (+http://www.yourdomain.com)'
+if environ.get('SCRAPY_USER_AGENT'):
+    USER_AGENT = environ.get('SCRAPY_USER_AGENT')
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -37,10 +40,12 @@ ROBOTSTXT_OBEY = False
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+DEFAULT_REQUEST_HEADERS = {
+   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+   'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4',
+   'Accept-Encoding': 'gzip, deflate, br',
+   'Pragma': 'no-cache',
+}
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
@@ -62,9 +67,9 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'nba.pipelines.NbaPipeline': 300,
-#}
+# ITEM_PIPELINES = {
+#     'nba.pipelines.MongoDBPipeline': 300,
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

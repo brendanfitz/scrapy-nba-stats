@@ -15,11 +15,10 @@ class PlayersSpider(scrapy.Spider):
     
     def parse_search_results(self, response):
         resource_path = response.xpath('//div[@class="search-item-url"]/text()').extract_first()
-        import pdb; pdb.set_trace()
         if resource_path is None:
             raise ValueError('Player Not Found')
         url = 'https://www.basketball-reference.com' + resource_path
-        yield Request(url, callback=self.parse_per_game_stats)
+        yield scrapy.Request(url, callback=self.parse_per_game_stats)
 
     def parse_per_game_stats(self, response):
         table = response.xpath('//table[@id="per_game"]')
