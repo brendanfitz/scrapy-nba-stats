@@ -40,6 +40,7 @@ class TeamsSpider(scrapy.Spider):
             table_elems = row.xpath('./th|./td') 
 
             data = {}
+            data['team_name'] = self.team
             for elem in table_elems:
                 metric = elem.xpath('./@data-stat').extract_first()
                 value = elem.xpath('./text()|./a/text()').extract_first()
