@@ -1,16 +1,26 @@
 import scrapy
+import time
 
 
 class DraftSpider(scrapy.Spider):
     name = 'draft'
     allowed_domains = ['basketball-reference.com']
+    URL_TEMPLATE = 'https://www.basketball-reference.com/draft/NBA_{year}.html'
 
-    def __init__(self, year):
-        self.year = year
-    
+    def __init__(self, years=None, **kwargs):
+        self.current_year = None
+        super(DraftSpider, self).__init__(**kwargs)
+        if years is not None:
+            self.years = (int(year) for year in years.split(','))
+        else:
+            self.years = range(1977, 2022)
+
     def start_requests(self):
-        start_url = f'https://www.basketball-reference.com/draft/NBA_{self.year}.html'
-        yield scrapy.Request(start_url, self.parse)
+        for year in self.years:
+            print(f'Scraping draft year: {year}')
+            time.sleep(1)
+            url = self.URL_TEMPLATE.format(year=year)
+            yield scrapy.Request(url, self.parse)
 
     def parse(self, response):
         for table_data in self.parse_table(response, 'stats'):
@@ -23,7 +33,7 @@ class DraftSpider(scrapy.Spider):
         if len(table) == 0:
             return
 
-        thead = table.xpath('./thead/tr/th/text()').extract()
+        head = table.xpath('./thead/tr/th/text()').extract()
 
         trs = table.xpath('./tbody/tr')
         for row in trs:
@@ -46,6 +56,8 @@ class DraftSpider(scrapy.Spider):
                 value = elem.xpath('./text()|./a/text()').extract_first()
                 data[metric] = value
             
-            data['draft_year'] = self.year
-            data['draft_round'] = draft_round
+            data['draft_year'] = (response.xpath('//h1[@itemprop="name"]')
+                                  .xpath('span/text()')[0].extract()
+                                 )
+            data['url'] = draft_round
             yield data
